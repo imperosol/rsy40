@@ -3,6 +3,12 @@ name = "rsy40"
 version = "0.1.0"
 edition = "2021"
 
+[profile.release]
+strip = true
+panic = "abort"
+lto = true
+codegen-units = 1
+
 [dependencies]
 rand = "0.8.5"
 rand_distr = "0.4.3"
