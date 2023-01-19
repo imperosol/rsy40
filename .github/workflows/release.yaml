@@ -10,13 +10,64 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
-    name: rsy40-build
+  test:
+    name: Test
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install rust
+        uses: actions-rs/toolchain@v1
         with:
-         toolchain: stable
-      - run: cargo build --release
+          toolchain: stable
+          profile: minimal
+
+      - name: Build debug
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+
+      - name: Test
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+  deploy:
+    name: deploy
+    needs: [test]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target: [ aarch64-unknown-linux-gnu, armv7-unknown-linux-gnueabihf, i686-unknown-linux-gnu, i686-unknown-linux-musl, x86_64-unknown-linux-gnu, x86_64-pc-windows-msvc]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          override: true
+          target: ${{ matrix.target }}
+
+      - name: Build target
+        uses: actions-rs/cargo@v1
+        with:
+          use-cross: true
+          command: build
+          args: --release --target ${{ matrix.target }}
+
+      - name: Package
+        shell: bash
+        run: |
+          #strip target/${{ matrix.target }}/release/rsy40
+          cd target/${{ matrix.target }}/release          
+          tar czvf ../../../rsy40-${{ matrix.target }}.tar.gz rsy40
+          cd -
+      - name: Publish
+        uses: softprops/action-gh-release@v1
+        with:
+          files: 'rsy40*'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,9 +1,9 @@
-use std::cmp::min;
-use std::time::Duration;
 use lazy_static::lazy_static;
 use rand::distributions::{Bernoulli, Standard};
-use rand_distr::{Geometric, Normal};
 use rand::prelude::*;
+use rand_distr::{Geometric, Normal};
+use std::cmp::min;
+use std::time::Duration;
 use crate::vehicle::paymen_mean::PaymentMean;
 use crate::vehicle::vehicle_type::VehicleType;
 use crate::vehicle::vehicle_type::VehicleType::*;
@@ -33,23 +33,19 @@ impl Distribution<Vehicle> for Standard {
         let vtype = rng.gen::<VehicleType>();
         let nb_passengers = match vtype {
             Light => min(8, 1 + NB_PASSENGER_RNG.sample(rng) as u8),
-            _ => 1
+            _ => 1,
         };
         let low_carbon = match vtype {
             Light => LOW_CARBON_RNG.sample(rng),
-            _ => false
+            _ => false,
         };
         let taxi = match vtype {
             Light => TAXI_RNG.sample(rng),
             _ => false
         };
         let nb_kilometres = match vtype {
-            Light | Motorcycle => {
-                NB_KM_RNG_LIGHT.sample(rng)
-            }
-            _ => {
-                NB_KM_RNG_HEAVY.sample(rng)
-            }
+            Light | Motorcycle => NB_KM_RNG_LIGHT.sample(rng),
+            _ => NB_KM_RNG_HEAVY.sample(rng),
         };
         Vehicle {
             nb_passengers,
@@ -57,7 +53,7 @@ impl Distribution<Vehicle> for Standard {
             low_carbon,
             payment_mean: PaymentMean::rand_from_vehicle_type(rng, &vtype),
             type_: vtype,
-            nb_kilometres
+            nb_kilometres,
         }
     }
 }
@@ -77,7 +73,7 @@ impl Vehicle {
         let duration = Duration::from_millis(PAYMENT_TIME_RNG.sample(rng) as u64);
         match self.payment_mean {
             PaymentMean::Cash => duration,
-            PaymentMean::Toll => duration / 2
+            PaymentMean::Toll => duration / 2,
         }
     }
 

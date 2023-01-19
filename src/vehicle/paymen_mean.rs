@@ -8,7 +8,7 @@ use crate::vehicle::vehicle_type::VehicleType::*;
 #[derive(Debug)]
 pub enum PaymentMean {
     Cash,
-    Toll,  // télépéage
+    Toll, // télépéage
 }
 
 lazy_static!(
@@ -17,22 +17,16 @@ lazy_static!(
 );
 
 impl PaymentMean {
-    pub fn rand_from_vehicle_type<R: Rng + ?Sized>(
-        rng: &mut R, vtype: &VehicleType,
-    ) -> Self {
+    pub fn rand_from_vehicle_type<R: Rng + ?Sized>(rng: &mut R, vtype: &VehicleType) -> Self {
         match vtype {
-            Light | Motorcycle => {
-                match RNG_LIGHT.sample(rng) {
-                    true => Toll,
-                    false => Cash,
-                }
-            }
-            _ => {
-                match RNG_HEAVY.sample(rng) {
-                    true => Toll,
-                    false => Cash,
-                }
-            }
+            Light | Motorcycle => match RNG_LIGHT.sample(rng) {
+                true => Toll,
+                false => Cash,
+            },
+            _ => match RNG_HEAVY.sample(rng) {
+                true => Toll,
+                false => Cash,
+            },
         }
     }
 }

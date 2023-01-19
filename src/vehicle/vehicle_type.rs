@@ -1,7 +1,7 @@
+use crate::vehicle::vehicle_type::VehicleType::*;
 use lazy_static::lazy_static;
 use rand::distributions::{Standard, WeightedIndex};
 use rand::prelude::*;
-use crate::vehicle::vehicle_type::VehicleType::*;
 
 #[derive(Debug, Clone, Copy)]
 pub enum VehicleType {
@@ -9,20 +9,16 @@ pub enum VehicleType {
     Medium,
     Truck,
     HeavyTruck,
-    Motorcycle
+    Motorcycle,
 }
 
 lazy_static!(
-    static ref DIST: WeightedIndex<i32> = {
-        WeightedIndex::new(&[80, 10, 5, 4, 1]).unwrap()
-    };
+    static ref DIST: WeightedIndex<i32> = WeightedIndex::new(&[80, 10, 5, 4, 1]).unwrap();
 );
 
 impl Distribution<VehicleType> for Standard {
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> VehicleType {
-        static TYPES: [VehicleType; 5] = [
-            Light, Medium, Truck, HeavyTruck, Motorcycle
-        ];
+        static TYPES: [VehicleType; 5] = [Light, Medium, Truck, HeavyTruck, Motorcycle];
         TYPES[DIST.sample(rng)]
     }
 }
