@@ -64,6 +64,8 @@ jobs:
           ls -l -a
           cd target
           ls -l -a
+          cd ${{ matrix.target }}
+          ls -l -a
 #          mkdir release
 #          mkdir release/${{ matrix.target }}
 #          touch release/${{ matrix.target }}/rsy40
