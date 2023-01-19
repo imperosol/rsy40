@@ -68,5 +68,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: rsy40
-          path: rsy40/${{ matrix.target }}
+          path: release/${{ matrix.target }}
           retention-days: 5
