@@ -66,13 +66,12 @@ jobs:
           ls -l -a
           cd ${{ matrix.target }}
           ls -l -a
-#          mkdir release
-#          mkdir release/${{ matrix.target }}
-#          touch release/${{ matrix.target }}/rsy40
+          cd release
+          ls -l -a
 
-#      - name: Upload artifact
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: rsy40
-#          path: release/${{ matrix.target }}
-#          retention-days: 5
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: rsy40_${{ matrix.target }}
+          path: target/${{ matrix.target }}/release/rsy40
+          retention-days: 5
