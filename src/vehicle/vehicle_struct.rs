@@ -1,4 +1,5 @@
 use std::cmp::min;
+use std::time::Duration;
 use lazy_static::lazy_static;
 use rand::distributions::{Bernoulli, Standard};
 use rand_distr::{Geometric, Normal};
@@ -24,6 +25,7 @@ lazy_static!(
     static ref TAXI_RNG: Bernoulli = Bernoulli::new(0.05).unwrap();
     static ref NB_KM_RNG_LIGHT: Normal<f32> = Normal::new(60.0, 10.0).unwrap();
     static ref NB_KM_RNG_HEAVY: Normal<f32> = Normal::new(76.0, 10.0).unwrap();
+    static ref PAYMENT_TIME_RNG: Normal<f32> = Normal::new(60.0, 10.0).unwrap();
 );
 
 impl Distribution<Vehicle> for Standard {
@@ -64,5 +66,22 @@ impl Vehicle {
     #[inline(always)]
     pub fn carpooling(&self) -> bool {
         self.nb_passengers > 1 || self.taxi || self.low_carbon
+    }
+
+    pub fn time_until_next<R: Rng + ?Sized>(&self, rng: &mut R) -> Duration {
+        let generator = rand_distr::Exp::new(15.0).unwrap();
+        Duration::from_secs((generator.sample(rng) * 1000.0) as u64)
+    }
+
+    pub fn payment_duration<R: Rng + ?Sized>(&self, rng: &mut R) -> Duration {
+        let duration = Duration::from_millis(PAYMENT_TIME_RNG.sample(rng) as u64);
+        match self.payment_mean {
+            PaymentMean::Cash => duration,
+            PaymentMean::Toll => duration / 2
+        }
+    }
+
+    pub fn type_num(&self) -> usize {
+        self.type_ as usize
     }
 }
