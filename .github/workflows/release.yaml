@@ -10,32 +10,8 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-#  test:
-#    name: Test
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - name: Checkout
-#        uses: actions/checkout@v3
-#
-#      - name: Install rust
-#        uses: actions-rs/toolchain@v1
-#        with:
-#          toolchain: stable
-#          profile: minimal
-#
-#      - name: Build debug
-#        uses: actions-rs/cargo@v1
-#        with:
-#          command: build
-#
-#      - name: Test
-#        uses: actions-rs/cargo@v1
-#        with:
-#          command: test
   deploy:
     name: deploy
-#    needs: [test]
     runs-on: ubuntu-latest
     strategy:
       matrix:

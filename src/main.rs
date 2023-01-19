@@ -9,7 +9,7 @@ mod gate;
 
 fn main() {
     let mut rng = rand::thread_rng();
-    let mut toll = Toll::new(3);
+    let mut toll = Toll::new(10);
     for gate in toll.gates.iter_mut() {
         gate.launch_thread();
     }
@@ -18,7 +18,6 @@ fn main() {
         let time_until_next = vehicle.time_until_next(&mut rng);
         toll.add_vehicle(vehicle);
         println!("{}", &toll);
-        println!("{:?}", &time_until_next);
-        thread::sleep(time_until_next / 100);
+        thread::sleep(time_until_next / 10);
     }
 }

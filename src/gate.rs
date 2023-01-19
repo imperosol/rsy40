@@ -17,6 +17,10 @@ impl Gate {
         }
     }
 
+    pub fn empty(&self) -> bool {
+        self.queue.lock().unwrap().is_empty()
+    }
+
     pub fn launch_thread(&self) {
         let queue = self.queue.clone();
         let cond = self.cond.clone();
@@ -29,7 +33,7 @@ impl Gate {
                 }
                 let vehicle = lock.pop_front().unwrap();
                 drop(lock);
-                thread::sleep(vehicle.payment_duration(&mut rng) * 10);
+                thread::sleep(vehicle.payment_duration(&mut rng) / 10);
             }
         });
     }

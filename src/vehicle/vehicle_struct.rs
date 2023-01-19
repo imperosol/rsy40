@@ -65,12 +65,12 @@ impl Vehicle {
     }
 
     pub fn time_until_next<R: Rng + ?Sized>(&self, rng: &mut R) -> Duration {
-        let generator = rand_distr::Exp::new(15.0).unwrap();
-        Duration::from_secs((generator.sample(rng) * 1000.0) as u64)
+        let generator = rand_distr::Exp::new(0.2).unwrap();
+        Duration::from_secs((generator.sample(rng)) as u64)
     }
 
     pub fn payment_duration<R: Rng + ?Sized>(&self, rng: &mut R) -> Duration {
-        let duration = Duration::from_millis(PAYMENT_TIME_RNG.sample(rng) as u64);
+        let duration = Duration::from_secs(PAYMENT_TIME_RNG.sample(rng) as u64);
         match self.payment_mean {
             PaymentMean::Cash => duration,
             PaymentMean::Toll => duration / 2,
