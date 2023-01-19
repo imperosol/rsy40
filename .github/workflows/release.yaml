@@ -60,6 +60,7 @@ jobs:
 
       - name: create dir
         run: |
+          mkdir release
           mkdir release/${{ matrix.target }}
           touch release/${{ matrix.target }}/rsy40
 
