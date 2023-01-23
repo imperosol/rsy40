@@ -64,11 +64,6 @@ impl Vehicle {
         self.nb_passengers > 1 || self.taxi || self.low_carbon
     }
 
-    pub fn time_until_next<R: Rng + ?Sized>(&self, rng: &mut R) -> Duration {
-        let generator = rand_distr::Exp::new(0.2).unwrap();
-        Duration::from_secs((generator.sample(rng)) as u64)
-    }
-
     pub fn payment_duration<R: Rng + ?Sized>(&self, rng: &mut R) -> Duration {
         let duration = Duration::from_secs(PAYMENT_TIME_RNG.sample(rng) as u64);
         match self.payment_mean {
