@@ -9,11 +9,14 @@ mod vehicle;
 mod gate;
 mod toll_clock;
 mod logger;
+mod vt100;
 
 /// Fonction principale du programme
 /// Crée le péage, puis effectue une boucle infinie pour rajouter
 /// des véhicules dans le péage à intervalles de temps aléatoires.
 fn main() {
+    vt100::init();
+    println!("{}", "\n".repeat(7));
     let mut rng = rand::thread_rng();
     let mut toll = Toll::builder()
         .nb_gates(6)

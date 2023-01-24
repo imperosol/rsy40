@@ -85,7 +85,8 @@ impl Toll {
 
 impl Display for Toll {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        let mut buffer = self.clock.clock.to_string();
+        let mut buffer = format!("\x1b[{}A\x1b[J", self.gates.len() + 2);
+        buffer.push_str(self.clock.clock.to_string().as_str());
         for (i, gate) in self.gates.iter().enumerate() {
             buffer.push_str(i.to_string().as_str());
             buffer.push_str(" | ");
