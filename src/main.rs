@@ -1,28 +1,25 @@
-use std::thread;
 use std::thread::sleep;
-use std::time::Duration;
 use rand::Rng;
 
 use crate::toll::Toll;
-use crate::toll_clock::TollClock;
 use crate::vehicle::Vehicle;
 
 mod toll;
 mod vehicle;
 mod gate;
 mod toll_clock;
+mod logger;
 
+/// Fonction principale du programme
+/// Crée le péage, puis effectue une boucle infinie pour rajouter
+/// des véhicules dans le péage à intervalles de temps aléatoires.
 fn main() {
     let mut rng = rand::thread_rng();
     let mut toll = Toll::builder()
-        .nb_gates(10)
-        .acceleration_factor(100)
+        .nb_gates(6)
+        .acceleration_factor(60) // 1 seconde = 1 minute
+        .set_logger("toll.sqlite")
         .build();
-    let clock = TollClock::default();
-    println!("{:?}", clock);
-    for gate in toll.gates.iter_mut() {
-        gate.launch_thread();
-    }
     loop {
         let vehicle = rng.gen::<Vehicle>();
         let time_until_next = toll.time_until_next_vehicle(&mut rng);

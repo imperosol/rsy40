@@ -17,6 +17,12 @@ lazy_static!(
 );
 
 impl Distribution<VehicleType> for Standard {
+    /// Renvoie un type de véhicule aléatoire avec les pondérations suivantes :
+    /// - 80% de véhicules légers
+    /// - 10% de véhicules intermédiaires
+    /// - 5% de poids lourds
+    /// - 4% de poids très lourds
+    /// - 1% de motos
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> VehicleType {
         static TYPES: [VehicleType; 5] = [Light, Medium, Truck, HeavyTruck, Motorcycle];
         TYPES[DIST.sample(rng)]
